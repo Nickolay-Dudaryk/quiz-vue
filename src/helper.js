@@ -10,3 +10,8 @@ export const shuffleArr = (arr) => {
 
   return copyArr;
 };
+
+
+export const disableBtns = (btns) => {
+  btns.forEach(btn => btn.disabled = true);
+}
