@@ -35,11 +35,21 @@
 <script>
 export default {
     props: {
-        selectedCategory: String,
+      selectedCategory: String,
     }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  .category-select {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid gray;
+    background-color: white;
+    padding: 15px 10px;
+    outline: none;
+    margin-bottom: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
 </style>

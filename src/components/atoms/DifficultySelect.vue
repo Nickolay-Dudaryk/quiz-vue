@@ -14,11 +14,8 @@
 
 <script>
 export default {
-    props: {
-        selectedDifficulty: String,
-    }
+  props: {
+    selectedDifficulty: String,
+  },
 };
 </script>
-
-<style>
-</style>

@@ -1,15 +1,23 @@
 <script>
-import Slider from "@vueform/slider";
-import CategorySelect from "./components/CategorySelect.vue";
-import DifficultySelect from "./components/DifficultySelect.vue";
+// import Slider from "@vueform/slider";
+// import CategorySelect from "./components/atoms/CategorySelect.vue";
+// import DifficultySelect from "./components/atoms/DifficultySelect.vue";
+import Settings from "./components/organisms/Settings.vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import Score from "./components/atoms/Score.vue";
+import Question from "./components/atoms/Question.vue";
 import axios from "axios";
 import { shuffleArr, disableBtns } from "./helper";
 
 export default {
   components: {
-    Slider,
-    CategorySelect,
-    DifficultySelect,
+    // Slider,
+    // CategorySelect,
+    // DifficultySelect,
+    Settings,
+    PulseLoader,
+    Score,
+    Question,
   },
   data() {
     return {
@@ -19,6 +27,8 @@ export default {
       isLastQuestion: false,
       selectedDifficulty: "any",
       isPlaying: false,
+      isFetching: false,
+      ifFetchError: false,
       sliderOptions: {
         min: 1,
         max: 50,
@@ -48,8 +58,11 @@ export default {
       this.currentQuestionIdx = 0;
       this.isLastQuestion = false;
       this.selectedDifficulty = "any";
-      this.correctAnswers = 0;
       this.isPlaying = false;
+      this.isFetching = false;
+      this.isFetchError = false;
+      this.questions = [];
+      this.correctAnswers = 0;
     },
     selectCategory(category) {
       this.selectedCategory = category;
@@ -57,7 +70,7 @@ export default {
     selectDifficulty(difficulty) {
       this.selectedDifficulty = difficulty;
     },
-    handleUserChoice(event, userAnswer, correctAnswer, questionIdx) {
+    handleUserChoice(event, userAnswer, correctAnswer) {
       const listItem = event.target.closest("li");
       const btns = listItem.querySelectorAll(".user-select-btn");
 
@@ -83,10 +96,16 @@ export default {
     },
     async fetchQuestions(amount, category, difficulty) {
       try {
+        this.isFetching = true;
         const url = `https://opentdb.com/api.php?amount=${amount}${category}${difficulty}`;
         const response = await axios.get(url);
 
         const data = response.data.results;
+
+        if (!data.length) {
+          throw new Error();
+        }
+
         const result = [];
 
         for (let i = 0; i < data.length; i++) {
@@ -102,76 +121,91 @@ export default {
 
         this.questions = result;
       } catch (error) {
+        this.isFetchError = true;
+
         console.error(
           `Something goes wrong with fetching data from API: ${error.message}`
         );
+      } finally {
+        this.isFetching = false;
       }
     },
   },
   computed: {
-    isDisabled: function() {
+    isDisabled: function () {
       if (this.questionsAmount - 1 == this.currentQuestionIdx) {
-        return !this.isLastQuestion
+        return !this.isLastQuestion;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <template>
   <div class="container">
-    <div class="content-wrapper" v-if="!isPlaying">
-      <CategorySelect
-        :selectedCategory="selectedCategory"
-        @selectCategory="selectCategory"
-      />
-    </div>
+    <Settings v-if="!isPlaying" :selectedCategory="selectedCategory" />
+    <!-- <CategorySelect
+      :selectedCategory="selectedCategory"
+      @selectCategory="selectCategory"
+      v-if="!isPlaying"
+    />
 
-    <div class="content-wrapper" v-if="!isPlaying">
+    <div class="range-select" v-if="!isPlaying">
       <Slider
         v-model="questionsAmount"
         v-bind="this.sliderOptions"
-        class="range-select"
+        class="range-select__slider"
       />
-      <span>Number of questions</span>
+      <p class="range-select__text">Questions</p>
     </div>
 
-    <div class="content-wrapper" v-if="!isPlaying">
-      <DifficultySelect
-        :selectedDifficulty="selectedDifficulty"
-        @selectDifficulty="selectDifficulty"
-      />
-    </div>
+    <DifficultySelect
+      :selectedDifficulty="selectedDifficulty"
+      @selectDifficulty="selectDifficulty"
+      v-if="!isPlaying"
+    />
 
-    <button type="button" @click="startGame" v-if="!isPlaying">
+    <button
+      type="button"
+      @click="startGame"
+      v-if="!isPlaying"
+      class="primary-btn"
+    >
       Start game
-    </button>
+    </button> -->
+
+    <PulseLoader v-else-if="isPlaying && isFetching" />
+
+    <div v-else-if="isFetchError">
+      <p>Sorry, something went wrong. Please, try again.</p>
+      <button type="button" @click="stopGame">Main page</button> 
+    </div>
 
     <div v-else>
-      <p>Score: {{ this.correctAnswers }} of {{ this.questionsAmount }}</p>
-      <ul>
+      <Score
+        :correctAnswers="this.correctAnswers"
+        :questionsAmount="this.questionsAmount"
+      />
+      <ul class="list">
         <li
           v-for="(item, index) in this.questions"
           :key="item"
           v-show="this.currentQuestionIdx === index"
+          class="list-item"
         >
-          <p>{{ item.question }}</p>
+          <Question :question="item.question" />
           <button
             type="button"
             v-for="el in item.answers"
             :key="el"
-            @click="handleUserChoice($event, el, item.correct_answer, index)"
+            @click="handleUserChoice($event, el, item.correct_answer)"
             class="user-select-btn"
           >
             {{ el }}
           </button>
         </li>
       </ul>
-      <button
-        type="button"
-        @click="nextQuestion"
-        :disabled="isDisabled"
-      >
+      <button type="button" @click="nextQuestion" :disabled="isDisabled">
         Next question
       </button>
       <button type="button" @click="stopGame">Stop game</button>
@@ -179,27 +213,33 @@ export default {
   </div>
 </template>
 
-<style src="@vueform/slider/themes/default.css"></style>
 <style lang="scss">
+@import "./styles/index.scss";
+@import "@vueform/slider/themes/default.css";
+
 .container {
   width: 100%;
   height: 100vh;
+  padding: 0 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.content-wrapper {
-  width: 80%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-}
 .range-select {
   margin-top: 40px;
-  width: 50%;
+  margin-bottom: 40px;
+  width: 100%;
+
+  &__slider {
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .slider-touch-area {
+    cursor: pointer;
+  }
 }
 
 .user-select-btn {
