@@ -1,9 +1,8 @@
 <template>
   <select
-    v-model="selectedDifficulty"
     class="category-select"
-    :value="selectedDifficulty"
-    @change="$emit('selectDifficulty', $event.target.value)"
+    :value="$store.state.selectedDifficulty"
+    @change="$store.commit('selectDifficulty', $event.target.value)"
   >
     <option value="any">Any Difficulty</option>
     <option value="easy">Easy</option>
@@ -14,8 +13,5 @@
 
 <script>
 export default {
-  props: {
-    selectedDifficulty: String,
-  },
 };
 </script>

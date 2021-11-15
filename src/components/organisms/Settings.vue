@@ -1,54 +1,37 @@
 <template>
   <div class="settings-page">
-    <CategorySelect
-      :selectedCategory="selectedCategory"
-      @selectCategory="selectCategory"
-      v-if="!isPlaying"
-    />
+    <CategorySelect />
 
-    <!-- <div class="range-select" v-if="!isPlaying">
+    <div class="range-select">
       <Slider
-        v-model="questionsAmount"
-        v-bind="this.sliderOptions"
+        v-model="$store.state.questionsAmount"
+        v-bind="$store.state.sliderOptions"
+        @change="$store.commit('questionsAmount', $event)"
         class="range-select__slider"
       />
       <p class="range-select__text">Questions</p>
-    </div> -->
+    </div>
 
-    <!-- <DifficultySelect
-      :selectedDifficulty="selectedDifficulty"
-      @selectDifficulty="selectDifficulty"
-      v-if="!isPlaying"
-    /> -->
+    <DifficultySelect />
 
-    <button
-      type="button"
-      @click="startGame"
-      v-if="!isPlaying"
-      class="primary-btn"
-    >
+    <button type="button" @click="startGame" class="primary-btn">
       Start game
     </button>
   </div>
 </template>
 
 <script>
-import CategorySelect from '../atoms/CategorySelect.vue';
-import DifficultySelect from '../atoms/DifficultySelect.vue';
+import CategorySelect from "../atoms/CategorySelect.vue";
+import DifficultySelect from "../atoms/DifficultySelect.vue";
 import Slider from "@vueform/slider";
 
 export default {
-    components: {
-        CategorySelect,
-        DifficultySelect,
-        Slider
-    },
-    props: {
-        selectedCategory: String,
-    }
-}
+  components: {
+    CategorySelect,
+    DifficultySelect,
+    Slider,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

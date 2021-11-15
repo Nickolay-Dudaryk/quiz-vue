@@ -4,9 +4,9 @@
 
 <script>
 export default {
-    props: {
-        correctAnswers: Number,
-        questionsAmount: Number,    
-    }
-}
+  props: {
+    correctAnswers: Number,
+    questionsAmount: Number,
+  },
+};
 </script>

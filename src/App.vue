@@ -21,20 +21,20 @@ export default {
   },
   data() {
     return {
-      selectedCategory: "0",
-      questionsAmount: 10,
-      currentQuestionIdx: 0,
-      isLastQuestion: false,
-      selectedDifficulty: "any",
-      isPlaying: false,
-      isFetching: false,
-      ifFetchError: false,
-      sliderOptions: {
-        min: 1,
-        max: 50,
-      },
-      questions: [],
-      correctAnswers: 0,
+    //   selectedCategory: "0",
+    //   questionsAmount: 10,
+    //   currentQuestionIdx: 0,
+    //   isLastQuestion: false,
+    //   selectedDifficulty: "any",
+    //   isPlaying: false,
+    //   isFetching: false,
+    //   ifFetchError: false,
+    //   sliderOptions: {
+    //     min: 1,
+    //     max: 50,
+    //   },
+    //   questions: [],
+    //   correctAnswers: 0,
     };
   },
   methods: {
@@ -64,12 +64,12 @@ export default {
       this.questions = [];
       this.correctAnswers = 0;
     },
-    selectCategory(category) {
-      this.selectedCategory = category;
-    },
-    selectDifficulty(difficulty) {
-      this.selectedDifficulty = difficulty;
-    },
+    // selectCategory(category) {
+    //   this.selectedCategory = category;
+    // },
+    // selectDifficulty(difficulty) {
+    //   this.selectedDifficulty = difficulty;
+    // },
     handleUserChoice(event, userAnswer, correctAnswer) {
       const listItem = event.target.closest("li");
       const btns = listItem.querySelectorAll(".user-select-btn");
@@ -143,36 +143,7 @@ export default {
 
 <template>
   <div class="container">
-    <Settings v-if="!isPlaying" :selectedCategory="selectedCategory" />
-    <!-- <CategorySelect
-      :selectedCategory="selectedCategory"
-      @selectCategory="selectCategory"
-      v-if="!isPlaying"
-    />
-
-    <div class="range-select" v-if="!isPlaying">
-      <Slider
-        v-model="questionsAmount"
-        v-bind="this.sliderOptions"
-        class="range-select__slider"
-      />
-      <p class="range-select__text">Questions</p>
-    </div>
-
-    <DifficultySelect
-      :selectedDifficulty="selectedDifficulty"
-      @selectDifficulty="selectDifficulty"
-      v-if="!isPlaying"
-    />
-
-    <button
-      type="button"
-      @click="startGame"
-      v-if="!isPlaying"
-      class="primary-btn"
-    >
-      Start game
-    </button> -->
+    <Settings v-if="!isPlaying" />
 
     <PulseLoader v-else-if="isPlaying && isFetching" />
 
