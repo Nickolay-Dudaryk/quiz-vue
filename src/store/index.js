@@ -17,34 +17,34 @@ export default createStore({
     questions: [],
     correctAnswers: 0,
   }),
-  getters: {},
-  mutations: {
-    startGame(state) {
-      const amount = state.questionsAmount;
-      const category =
-        state.selectedCategory === "0"
-          ? ""
-          : `&category=${state.selectedCategory}`;
-      const difficulty =
-        state.selectedDifficulty === "any"
-          ? ""
-          : `&difficulty=${state.selectedDifficulty}`;
-
-      commit("isPlaying", true);
+  getters: {
+    isDisabled: () => {
+      if (state.questionsAmount - 1 == state.currentQuestionIdx) {
+        return !state.isLastQuestion;
+      }
     },
+  },
+  mutations: {
     selectCategory(state, category) {
       state.selectedCategory = category;
     },
     questionsAmount(state, amount) {
-      console.log(state.questionsAmount);
-      console.log(amount);
       state.questionsAmount = amount;
     },
     selectDifficulty(state, difficulty) {
       state.selectedDifficulty = difficulty;
     },
+    setQuestions(state, questions) {
+      state.questions = questions;
+    },
     isLastQuestion(state, bool) {
       state.isLastQuestion = bool;
+    },
+    setCurrentQuestionIdx(state, idx) {
+      state.currentQuestionIdx = idx;
+    },
+    setCorrectAnswers(state) {
+      state.correctAnswers += 1;
     },
     isPlaying(state, bool) {
       state.isPlaying = bool;
@@ -56,6 +56,74 @@ export default createStore({
       state.isFetchError = bool;
     },
   },
-  actions: {},
+  actions: {
+    startGame: ({ state }) => {
+      const amount = state.questionsAmount;
+      const category =
+        state.selectedCategory === "0"
+          ? ""
+          : `&category=${state.selectedCategory}`;
+      const difficulty =
+        state.selectedDifficulty === "any"
+          ? ""
+          : `&difficulty=${state.selectedDifficulty}`;
+
+      dispatch("fetchQuestions", amount, category, difficulty);
+
+      commit("isPlaying", true);
+    },
+    stopGame: ({ commit }) => {
+      commit("selectedCategory", "0");
+      commit("questionsAmount", 10);
+      commit("setCurrentQuestionIdx", 0);
+      commit("isLastQuestion", false);
+      commit("selectDifficulty", "any");
+      commit("isPlaying", false);
+      commit("isFetching", false);
+      commit("isFetchError", false);
+      commit("setQuestions", []);
+      commit("setCorrectAnswers", 0);
+    },
+    async fetchQuestions({ state, commit }, amount, category, difficulty) {
+      try {
+        commit("isFetching", true);
+        // state.isFetching = true;
+        const url = `https://opentdb.com/api.php?amount=${amount}${category}${difficulty}`;
+        const response = await axios.get(url);
+
+        const data = response.data.results;
+
+        if (!data.length) {
+          throw new Error();
+        }
+
+        const result = [];
+
+        for (let i = 0; i < data.length; i++) {
+          result.push({
+            question: data[i].question,
+            answers: shuffleArr([
+              ...data[i].incorrect_answers,
+              data[i].correct_answer,
+            ]),
+            correct_answer: data[i].correct_answer,
+          });
+        }
+
+        commit("setQuestions", result);
+        // state.questions = result;
+      } catch (error) {
+        commit("isFetchError", true);
+        // state.isFetchError = true;
+
+        console.error(
+          `Something goes wrong with fetching data from API: ${error.message}`
+        );
+      } finally {
+        commit("isFetching", false);
+        // state.isFetching = false;
+      }
+    },
+  },
   modules: {},
 });
