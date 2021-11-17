@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import axios from "axios";
 
 export default createStore({
   state: () => ({
@@ -18,7 +19,7 @@ export default createStore({
     correctAnswers: 0,
   }),
   getters: {
-    isDisabled: () => {
+    isDisabled: (state) => {
       if (state.questionsAmount - 1 == state.currentQuestionIdx) {
         return !state.isLastQuestion;
       }
@@ -40,8 +41,8 @@ export default createStore({
     isLastQuestion(state, bool) {
       state.isLastQuestion = bool;
     },
-    setCurrentQuestionIdx(state, idx) {
-      state.currentQuestionIdx = idx;
+    setCurrentQuestionIdx(state) {
+      state.currentQuestionIdx += 1;
     },
     setCorrectAnswers(state) {
       state.correctAnswers += 1;
@@ -84,10 +85,14 @@ export default createStore({
       commit("setQuestions", []);
       commit("setCorrectAnswers", 0);
     },
-    async fetchQuestions({ state, commit }, amount, category, difficulty) {
+    nextQuestion: ({ state, commit }) => {
+      if (state.currentQuestionIdx < state.questionsAmount - 1) {
+        commit("setCurrentQuestionIdx");
+      }
+    },
+    async fetchQuestions({ commit }, amount, category, difficulty) {
       try {
         commit("isFetching", true);
-        // state.isFetching = true;
         const url = `https://opentdb.com/api.php?amount=${amount}${category}${difficulty}`;
         const response = await axios.get(url);
 
@@ -111,19 +116,15 @@ export default createStore({
         }
 
         commit("setQuestions", result);
-        // state.questions = result;
       } catch (error) {
         commit("isFetchError", true);
-        // state.isFetchError = true;
 
         console.error(
           `Something goes wrong with fetching data from API: ${error.message}`
         );
       } finally {
         commit("isFetching", false);
-        // state.isFetching = false;
       }
     },
   },
-  modules: {},
 });

@@ -14,7 +14,7 @@
 
     <DifficultySelect />
 
-    <button type="button" @click="startGame" class="primary-btn">
+    <button type="button" @click="onGameStart" class="primary-btn">
       Start game
     </button>
   </div>
@@ -24,6 +24,7 @@
 import CategorySelect from "../atoms/CategorySelect.vue";
 import DifficultySelect from "../atoms/DifficultySelect.vue";
 import Slider from "@vueform/slider";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -31,7 +32,29 @@ export default {
     DifficultySelect,
     Slider,
   },
+  methods: {
+    ...mapActions(["startGame"]),
+
+    onGameStart() {
+      this.startGame();
+    }
+  }
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.range-select {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+
+  &__slider {
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .slider-touch-area {
+    cursor: pointer;
+  }
+}
+</style>
