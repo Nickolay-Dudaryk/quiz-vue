@@ -43,16 +43,28 @@ export default createStore({
     isLastQuestion(state, bool) {
       state.isLastQuestion = bool;
     },
-    setCurrentQuestionIdx(state) {
-      state.currentQuestionIdx += 1;
+    setCurrentQuestionIdx(state, num) {
+      if (num != 0) {
+        state.currentQuestionIdx += num;
+      } else {
+        state.currentQuestionIdx = num;
+      }
     },
-    setAmountOfAnswers(state) {
-      setTimeout(() => {
-        state.amountOfAnwsers += 1;
-      }, 1500);
+    setAmountOfAnswers(state, num) {
+      if (num != 0) {
+        setTimeout(() => {
+          state.amountOfAnwsers += num;
+        }, 1500);
+      } else {
+        state.amountOfAnwsers = num;
+      }
     },
-    setCorrectAnswers(state) {
-      state.correctAnswers += 1;
+    setCorrectAnswers(state, num) {
+      if (num != 0) {
+        state.correctAnswers += num;
+      } else {
+        state.correctAnswers = num;
+      }
     },
     isPlaying(state, bool) {
       state.isPlaying = bool;
@@ -85,7 +97,7 @@ export default createStore({
     },
     nextQuestion: ({ state, commit }) => {
       if (state.currentQuestionIdx < state.questionsAmount - 1) {
-        commit("setCurrentQuestionIdx");
+        commit("setCurrentQuestionIdx", 1);
       }
     },
     async fetchQuestions({ state, commit }) {

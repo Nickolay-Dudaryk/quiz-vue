@@ -38,7 +38,7 @@ export default {
 
       if (userAnswer === correctAnswer) {
         event.target.classList.add("btn_correct");
-        this.setCorrectAnswers();
+        this.setCorrectAnswers(1);
       } else {
         event.target.classList.add("btn_incorrect");
 
@@ -49,7 +49,7 @@ export default {
         });
       }
 
-      this.setAmountOfAnswers();
+      this.setAmountOfAnswers(1);
       disableBtns(btns);
     }
   },
