@@ -2,41 +2,16 @@
 import Settings from "./components/organisms/Settings.vue";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import Game from "./components/organisms/Game.vue";
+import Finish from "./components/organisms/Finish.vue";
 import FetchError from "./components/molecules/FetchError.vue";
-import { shuffleArr, disableBtns } from "./helper";
 
 export default {
   components: {
     Settings,
     PulseLoader,
     Game,
+    Finish,
     FetchError,
-  },
-  methods: {
-    handleUserChoice(event, userAnswer, correctAnswer) {
-      const listItem = event.target.closest("li");
-      const btns = listItem.querySelectorAll(".user-select-btn");
-
-      if (userAnswer === correctAnswer) {
-        event.target.classList.add("user-select-btn_correct");
-        this.correctAnswers = this.correctAnswers + 1;
-      } else {
-        event.target.classList.add("user-select-btn_incorrect");
-
-        btns.forEach((el) => {
-          if (el.textContent === correctAnswer) {
-            el.classList.add("user-select-btn_correct");
-          }
-        });
-      }
-
-      disableBtns(btns);
-    },
-    // nextQuestion() {
-    //   if (this.currentQuestionIdx < this.questionsAmount - 1) {
-    //     this.currentQuestionIdx = this.currentQuestionIdx + 1;
-    //   }
-    // },
   },
 };
 </script>
@@ -48,6 +23,8 @@ export default {
     <PulseLoader v-else-if="$store.state.isPlaying && $store.state.isFetching" />
 
     <FetchError v-else-if="$store.state.isFetchError" />
+
+    <Finish v-else-if="$store.state.amountOfAnwsers === $store.state.questionsAmount" />
 
     <Game v-else />
   </div>
@@ -65,17 +42,5 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.user-select-btn {
-  transition: background-color 0.4s;
-
-  &_correct {
-    background-color: lightgreen;
-  }
-
-  &_incorrect {
-    background-color: lightcoral;
-  }
 }
 </style>

@@ -1,12 +1,8 @@
 <template>
-  <p>Score: {{ correctAnswers }} of {{ questionsAmount }}</p>
+  <p>Score: {{ $store.state.correctAnswers }} of {{ $store.state.questionsAmount }}</p>
 </template>
 
 <script>
 export default {
-  props: {
-    correctAnswers: Number,
-    questionsAmount: Number,
-  },
 };
 </script>

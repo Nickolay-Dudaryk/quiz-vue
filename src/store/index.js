@@ -1,11 +1,13 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import { shuffleArr } from "../helper";
 
 export default createStore({
   state: () => ({
     selectedCategory: "0",
     questionsAmount: 10,
     currentQuestionIdx: 0,
+    amountOfAnwsers: 0,
     isLastQuestion: false,
     selectedDifficulty: "any",
     isPlaying: false,
@@ -44,6 +46,11 @@ export default createStore({
     setCurrentQuestionIdx(state) {
       state.currentQuestionIdx += 1;
     },
+    setAmountOfAnswers(state) {
+      setTimeout(() => {
+        state.amountOfAnwsers += 1;
+      }, 1500);
+    },
     setCorrectAnswers(state) {
       state.correctAnswers += 1;
     },
@@ -58,23 +65,13 @@ export default createStore({
     },
   },
   actions: {
-    startGame: ({ state }) => {
-      const amount = state.questionsAmount;
-      const category =
-        state.selectedCategory === "0"
-          ? ""
-          : `&category=${state.selectedCategory}`;
-      const difficulty =
-        state.selectedDifficulty === "any"
-          ? ""
-          : `&difficulty=${state.selectedDifficulty}`;
-
-      dispatch("fetchQuestions", amount, category, difficulty);
+    startGame: ({ commit, dispatch }) => {
+      dispatch("fetchQuestions");
 
       commit("isPlaying", true);
     },
     stopGame: ({ commit }) => {
-      commit("selectedCategory", "0");
+      commit("selectCategory", "0");
       commit("questionsAmount", 10);
       commit("setCurrentQuestionIdx", 0);
       commit("isLastQuestion", false);
@@ -82,17 +79,29 @@ export default createStore({
       commit("isPlaying", false);
       commit("isFetching", false);
       commit("isFetchError", false);
-      commit("setQuestions", []);
+      commit("setQuestions", null);
       commit("setCorrectAnswers", 0);
+      commit("setAmountOfAnswers", 0);
     },
     nextQuestion: ({ state, commit }) => {
       if (state.currentQuestionIdx < state.questionsAmount - 1) {
         commit("setCurrentQuestionIdx");
       }
     },
-    async fetchQuestions({ commit }, amount, category, difficulty) {
+    async fetchQuestions({ state, commit }) {
       try {
         commit("isFetching", true);
+
+        const amount = state.questionsAmount;
+        const category =
+          state.selectedCategory === "0"
+            ? ""
+            : `&category=${state.selectedCategory}`;
+        const difficulty =
+          state.selectedDifficulty === "any"
+            ? ""
+            : `&difficulty=${state.selectedDifficulty}`;
+
         const url = `https://opentdb.com/api.php?amount=${amount}${category}${difficulty}`;
         const response = await axios.get(url);
 

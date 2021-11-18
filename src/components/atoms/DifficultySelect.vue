@@ -6,7 +6,7 @@
   >
     <option value="any">Any Difficulty</option>
     <option value="easy">Easy</option>
-    <option value="meduim">Meduim</option>
+    <option value="medium">Meduim</option>
     <option value="hard">Hard</option>
   </select>
 </template>

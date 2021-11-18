@@ -1,8 +1,18 @@
 <template>
-    <p>Sorry, something went wrong. Please, try again.</p>
-    <button type="button" @click="$store.dispatch('stopGame')">Main page</button> 
+  <p>Sorry, something went wrong. Please, try again.</p>
+  <button type="button" @click="onGameStop" class="btn btn_stop">Main page</button>
 </template>
 
 <script>
-export default {}
+import { mapActions } from "vuex";
+
+export default {
+  methods: {
+    ...mapActions(["stopGame"]),
+
+    onGameStop() {
+      this.stopGame();
+    },
+  },
+};
 </script>

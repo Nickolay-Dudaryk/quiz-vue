@@ -14,7 +14,7 @@
 
     <DifficultySelect />
 
-    <button type="button" @click="onGameStart" class="primary-btn">
+    <button type="button" @click="onGameStart" class="btn btn_start">
       Start game
     </button>
   </div>
@@ -43,6 +43,14 @@ export default {
 </script>
 
 <style lang="scss">
+.settings-page {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .range-select {
   margin-top: 40px;
   margin-bottom: 40px;

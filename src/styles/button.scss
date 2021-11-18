@@ -1,14 +1,47 @@
-.primary-btn {
+.btn {
   padding: 15px 10px;
-  background-color: #10b981;
   border: none;
   border-radius: 5px;
-  color: white;
   font-size: 1.2em;
   cursor: pointer;
-  transition: background-color 0.4s;
+  transition: all 0.4s;
 
-  &:hover {
-    background-color: #07875c;
+  &:disabled {
+    pointer-events: none;
+  }
+
+  &_start {
+    background-color: #10b981;
+    color: white;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &_stop {
+    &:hover {
+      background-color: lightcoral;
+    }
+  }
+
+  &_next {
+    &:hover {
+      background-color: #10b981;
+    }
+  }
+
+  &_answer {
+    &:hover {
+      background-color: rgb(211, 211, 211);
+    }
+  }
+
+  &_correct {
+    background-color: #10b981;
+  }
+
+  &_incorrect {
+    background-color: lightcoral;
   }
 }
