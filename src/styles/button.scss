@@ -14,26 +14,34 @@
     background-color: #10b981;
     color: white;
 
-    &:hover {
-      opacity: 0.8;
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 
   &_stop {
-    &:hover {
-      background-color: lightcoral;
+    @media (hover: hover) {
+      &:hover {
+        background-color: lightcoral;
+      }
     }
   }
 
   &_next {
-    &:hover {
-      background-color: #10b981;
+    @media (hover: hover) {
+      &:hover {
+        background-color: #10b981;
+      }
     }
   }
 
   &_answer {
-    &:hover {
-      background-color: rgb(211, 211, 211);
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgb(211, 211, 211);
+      }
     }
   }
 
