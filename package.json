@@ -8,10 +8,12 @@
   },
   "dependencies": {
     "vue": "^3.2.16",
+    "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
+    "@vue/cli-plugin-router": "^4.5.15",
     "@vueform/slider": "^2.0.5",
     "axios": "^0.24.0",
     "sass": "^1.43.4",

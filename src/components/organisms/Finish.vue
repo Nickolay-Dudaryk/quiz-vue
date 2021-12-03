@@ -4,7 +4,7 @@
     {{ $store.state.questionsAmount }}
   </p>
   <button type="button" @click="onGameStop" class="btn btn_start">
-    Main menu
+    Go back
   </button>
 </template>
 

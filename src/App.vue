@@ -1,32 +1,13 @@
 <script>
-import Settings from "./components/organisms/Settings.vue";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
-import Game from "./components/organisms/Game.vue";
-import Finish from "./components/organisms/Finish.vue";
-import FetchError from "./components/molecules/FetchError.vue";
 
 export default {
-  components: {
-    Settings,
-    PulseLoader,
-    Game,
-    Finish,
-    FetchError,
-  },
 };
 </script>
 
 <template>
+  <router-link to="/" class="btn btn_start router-link router-link_menu">Menu</router-link>
   <div class="container">
-    <Settings v-if="!$store.state.isPlaying" />
-
-    <PulseLoader v-else-if="$store.state.isPlaying && $store.state.isFetching" />
-
-    <FetchError v-else-if="$store.state.isFetchError" />
-
-    <Finish v-else-if="$store.state.amountOfAnwsers === $store.state.questionsAmount" />
-
-    <Game v-else />
+    <router-view />
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-page">
+  <div class="options">
     <CategorySelect />
 
     <div class="range-select">
@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss">
-.settings-page {
+.options {
   width: 100%;
   max-width: 500px;
   display: flex;
